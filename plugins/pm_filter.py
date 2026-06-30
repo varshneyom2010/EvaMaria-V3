@@ -827,8 +827,10 @@ async def manual_filters(client, message, text=False):
                 break
     else:
         return False
-@Client.on_message(filters.private & filters.text & ~filters.command())
+@Client.on_message(filters.private & filters.text)
 async def pm_text_filter(client, message):
+    if message.text.startswith("/"):
+        return
     search_query = message.text.strip()
     if len(search_query) < 2:
         return await message.reply_text("Please enter full movie name!")
@@ -847,3 +849,4 @@ async def pm_text_filter(client, message):
         text=f"🔍 Your Search: **{search_query}**\n\n👇 Click below button to download:",
         reply_markup=InlineKeyboardMarkup(btn)
     )
+
