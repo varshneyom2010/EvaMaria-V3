@@ -34,10 +34,22 @@ class Media(Document):
 
 async def save_file(media):
     """Save file in database"""
-
+    
     # TODO: Find better way to get same file_id for same media to avoid duplicates
     file_id, file_ref = unpack_new_file_id(media.file_id)
     file_name = re.sub(r"(_|\-|\.|\+)", " ", str(media.file_name))
+    
+    try:
+        exist = await Media.find_one({
+            'file_name': file_name,
+            'file_size': media.file_size
+        })
+        if exist:
+            logger.info(f"'{file_name}' is already saved in database (Matched by Name & Size)")
+            return False, 2
+    except Exception as e:
+        logger.error(f"Error checking duplicate: {e}")
+
     try:
         file = Media(
             file_id=file_id,
@@ -54,17 +66,14 @@ async def save_file(media):
     else:
         try:
             await file.commit()
-        except DuplicateKeyError:      
+        except DuplicateKeyError:
             logger.warning(
                 f'{getattr(media, "file_name", "NO_FILE")} is already saved in database'
             )
-
             return False, 0
         else:
             logger.info(f'{getattr(media, "file_name", "NO_FILE")} is saved to database')
             return True, 1
-
-
 
 async def get_search_results(query, file_type=None, max_results=10, offset=0, filter=False):
     """For given query return (results, next_offset)"""
