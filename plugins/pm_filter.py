@@ -827,7 +827,7 @@ async def manual_filters(client, message, text=False):
                 break
     else:
         return False
-@Client.on_message(filters.private & filters.text & ~filters.command)
+@Client.on_message(filters.private & filters.text & ~filters.command())
 async def pm_text_filter(client, message):
     search_query = message.text.strip()
     if len(search_query) < 2:
