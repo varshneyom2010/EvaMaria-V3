@@ -1,3 +1,7 @@
+import server
+server.start()
+
+# ... आपका पुराना बोट कोड यहाँ रहेगा ...
 import logging
 import logging.config
 
