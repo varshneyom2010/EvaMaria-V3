@@ -827,3 +827,23 @@ async def manual_filters(client, message, text=False):
                 break
     else:
         return False
+@Client.on_message(filters.private & filters.text & ~filters.command)
+async def pm_text_filter(client, message):
+    search_query = message.text.strip()
+    if len(search_query) < 2:
+        return await message.reply_text("Please enter full movie name!")
+    files, offset, total_results = await get_search_results(search_query, offset=0, filter=True)
+    if not files:
+        return await message.reply_text("Movie not found in database!")
+    btn = []
+    for file in files:
+        btn.append([
+            InlineKeyboardButton(
+                text=f"🎬 {file.file_name} [{file.file_size}]",
+                callback_data=f"file_{file.file_id}"
+            )
+        ])
+    await message.reply_text(
+        text=f"🔍 Your Search: **{search_query}**\n\n👇 Click below button to download:",
+        reply_markup=InlineKeyboardMarkup(btn)
+    )
