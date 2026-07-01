@@ -20,6 +20,8 @@ BATCH_FILES = {}
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client, message):
+    # स्टिकर भेजने के लिए यह लाइन जोड़ें
+    await client.send_sticker(message.chat.id, "CAACAgQAAxkBAAFN5pNqRKeAdCFha2e6MPfDc17vs13gdgACkBMAAmRUZGx4GwLX9XCPAQ")
     if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
         buttons = [
             [
