@@ -632,7 +632,7 @@ async def auto_filter(client, msg, spoll=False):
             return
         if 2 < len(message.text) < 100:
             search = message.text
-            files, offset, total_results = await get_search_results(search.lower(), offset=0, filter=True)
+            files, offset, total_results = await get_search_results(search.lower(), offset=0, filter=False)
             if not files:
                 if settings["spell_check"]:
                     return await advantage_spell_chok(msg)
