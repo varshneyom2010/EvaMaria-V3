@@ -32,7 +32,6 @@ SPELL_CHECK = {}
 
 @Client.on_message((filters.group | filters.private) & filters.text & filters.incoming)
 async def give_filter(client, message):
-    await client.send_chat_action(message.chat.id,"typing")
     if message.chat.type == "private":
         await auto_filter(client, message)
     else:
@@ -620,6 +619,11 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
 
 async def auto_filter(client, msg, spoll=False):
+    try:
+        from pyrogram.enums import ChatAction
+        await client.send_chat_action(msg.chat.id, ChatAction.TYPING)
+    except Exception:
+        pass
     if not spoll:
         message = msg
         settings = await get_settings(message.chat.id)
