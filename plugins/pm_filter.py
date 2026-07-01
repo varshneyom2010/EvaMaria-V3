@@ -32,6 +32,7 @@ SPELL_CHECK = {}
 
 @Client.on_message((filters.group | filters.private) & filters.text & filters.incoming)
 async def give_filter(client, message):
+    await client.send_chat_action(message.chat.id,"typing")
     if message.chat.type == "private":
         await auto_filter(client, message)
     else:
