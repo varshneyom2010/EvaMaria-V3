@@ -30,15 +30,14 @@ BUTTONS = {}
 SPELL_CHECK = {}
 
 
-@Client.on_message(filters.group & filters.text & filters.incoming)
+@Client.on_message((filters.group | filters.private) & filters.text & filters.incoming)
 async def give_filter(client, message):
-    k = await manual_filters(client, message)
-    if k == False:
+    if message.chat.type == "private":
         await auto_filter(client, message)
-
-@Client.on_message(filters.private & filters.text & filters.incoming)
-async def give_pm_filter(client, message):
-    await pm_auto_filter(client, message)
+    else:
+        k = await manual_filters(client, message)
+        if k == False:
+            await auto_filter(client, message)
 
 
 @Client.on_callback_query(filters.regex(r"^next"))
